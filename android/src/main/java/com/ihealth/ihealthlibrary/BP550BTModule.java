@@ -3,6 +3,7 @@ package com.ihealth.ihealthlibrary;
 import android.text.TextUtils;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
@@ -140,10 +141,10 @@ public class BP550BTModule extends iHealthBaseModule {
     }
 
     @ReactMethod
-    public void setDisplayConfig(String mac, boolean lightOn, boolean timeOn) {
+    public void setDisplayConfig(String mac, Dynamic lightOn, Dynamic timeOn) {
         Bp550BTControl bp550BTControl = iHealthDevicesManager.getInstance().getBp550BTControl(mac);
         if (bp550BTControl != null) {
-            bp550BTControl.setStatusOfDisplay(lightOn, timeOn);
+            bp550BTControl.setStatusOfDisplay(asBoolean(lightOn), asBoolean(timeOn));
         } else {
             WritableMap params = Arguments.createMap();
             params.putInt("errorid", 400);
