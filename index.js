@@ -9,6 +9,7 @@ var Component = {
     BP5SModule: require('./module/BP5SModule'),
     BP3LModule: require('./module/BP3LModule'),
     BP550BTModule: require('./module/BP550BTModule'),
+    BP550LTModule: require('./module/BP550LTModule'),
     BP7Module: require('./module/BP7Module'),
     BP7SModule: require('./module/BP7SModule'),
     BPProfileModule: require('./module/BPProfileModule'),

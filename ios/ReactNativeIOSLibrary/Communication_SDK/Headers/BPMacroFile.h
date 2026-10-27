@@ -196,6 +196,16 @@ typedef void(^BlockDeviceIDPS)(NSDictionary *idpsDict);
 #define KD5811BTConnectNoti     @"KD5811BTConnectNoti"
 #define KD5811BTDisConnectNoti  @"KD5811BTDisConnectNoti"
 
+#define BP300CLDiscover        @"BP300CLDiscover"
+#define BP300CLConnectFailed   @"BP300CLConnectFailed"
+#define BP300CLConnectNoti     @"BP300CLConnectNoti"
+#define BP300CLDisConnectNoti  @"BP300CLDisConnectNoti"
+
+#define KD723SEDiscover       @"KD723SEDiscover"
+#define KD723SEConnectFailed  @"KD723SEConnectFailed"
+#define KD723SEConnectNoti    @"KD723SEConnectNoti"
+#define KD723SEDisConnectNoti @"KD723SEDisConnectNoti"
+
 #define ABPMDiscover        @"ABPMDiscover"
 #define ABPMConnectFailed   @"ABPMConnectFailed"
 #define ABPMConnectNoti     @"ABPMConnectNoti"
@@ -302,5 +312,9 @@ typedef void(^BlockDeviceIDPS)(NSDictionary *idpsDict);
 #define kFunctionBPBodyMovementFlg @"haveBodyMovementFlg"
 
 #define kFunctionBPCurrentUser @"currentUser"
+
+#define kFunctionBPHaveMarking @"haveMarking"
+
+#define kFunctionBPHaveVoiceSetting @"voiceSetting"
 
 #endif

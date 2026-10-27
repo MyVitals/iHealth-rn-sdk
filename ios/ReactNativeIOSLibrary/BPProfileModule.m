@@ -262,7 +262,19 @@ RCT_EXPORT_MODULE()
     }
     
     [self sendEventToBridge:bridge eventNotify:eventNotify WithDict:errorDict];
-    
+
+}
+
++ (void)sendErrorToEmitter:(RCTEventEmitter *)emitter eventNotify:(NSString*)eventNotify WithCode:(NSInteger)errorCode mac:(NSString*)mac type:(NSString*)type{
+    NSMutableDictionary *errorDict = [NSMutableDictionary dictionary];
+    errorDict[kACTION] = kACTION_ERROR_BP;
+    if (errorCode != BPDidDisconnect) {
+        errorDict[kERROR_NUM_BP] = @(errorCode);
+    }
+    errorDict[kERROR_DESCRIPTION_BP] = [self descriptionForErrorCode:errorCode];
+    errorDict[kMAC] = mac ?: @"";
+    errorDict[kType] = type ?: @"";
+    [self sendEventToEmitter:emitter eventNotify:eventNotify WithDict:errorDict];
 }
 
 

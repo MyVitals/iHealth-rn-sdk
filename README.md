@@ -116,9 +116,14 @@ async function requestBluetoothPermissions() {
 }
 ```
 
-### 3. SDK License Authentication (Android only)
+### 3. SDK License Authentication
 
-Place the `.pem` license file provided by iHealth into `android/app/src/main/assets/`, then call the following once on app startup:
+The `.pem` license file provided by iHealth is bound to your app's bundle identifier (iOS) / package name (Android).
+
+- **Android:** place the file in `android/app/src/main/assets/`.
+- **iOS:** add the file to your app target in Xcode (Target Membership checked, so it is copied into the app bundle).
+
+Then call the following once on app startup, before scanning:
 
 ```javascript
 import { iHealthDeviceManagerModule } from '@ihealth/ihealthlibrary-react-native';
@@ -126,7 +131,11 @@ import { iHealthDeviceManagerModule } from '@ihealth/ihealthlibrary-react-native
 iHealthDeviceManagerModule.sdkAuthWithLicense('your_license_file.pem');
 ```
 
-> **iOS does not require license authentication.**
+The result arrives as `Event_Authenticate_Result` (`{ access }`).
+
+> On iOS, scanning and connecting do nothing — no devices are found and no error is reported — until a license matching the app's bundle identifier has been validated.
+>
+> On Android the native SDK is initialized when the app first comes to the foreground; a call made before that reports `access: false`. If that happens, call it again shortly afterwards.
 
 ### 4. Enable New Architecture (optional, recommended for RN 0.76+)
 
@@ -271,6 +280,7 @@ const emitter = new NativeEventEmitter(NativeModules.BP5SModule); // top-level �
 | `BP5Module` | `NativeModules.BP5Module` |
 | `BP5SModule` | `NativeModules.BP5SModule` |
 | `BP550BTModule` | `NativeModules.BP550BTModule` |
+| `BP550LTModule` | `NativeModules.BP550LTModule` |
 | `BP3LModule` | `NativeModules.BP3LModule` |
 | `BP7Module` | `NativeModules.BP7Module` |
 | `BP7SModule` | `NativeModules.BP7SModule` |
@@ -322,6 +332,7 @@ iHealthDeviceManagerModule.stopDiscovery();
 | `iHealthDeviceManagerModule.BP7S` | `'BP7S'` | BP7S Blood Pressure Monitor |
 | `iHealthDeviceManagerModule.BP3L` | `'BP3L'` | BP3L Blood Pressure Monitor |
 | `iHealthDeviceManagerModule.KN550` | `'KN550'` | KN-550BT Blood Pressure Monitor |
+| `iHealthDeviceManagerModule.KN550LT` | `'KN550LT'` | KN-550LT Blood Pressure Monitor |
 | `iHealthDeviceManagerModule.PO3` | `'PO3'` | PO3 Pulse Oximeter |
 | `iHealthDeviceManagerModule.PO1` | `'PO1'` | PO1 Pulse Oximeter |
 | `iHealthDeviceManagerModule.HS2S` | `'HS2S'` | HS2S Body Scale |
@@ -385,8 +396,8 @@ managerEmitter.addListener(
   iHealthDeviceManagerModule.Event_Device_Disconnect, handler
 );
 
-// SDK license authentication result (Android only)
-// Payload: { authen: boolean }
+// SDK license authentication result
+// Payload: { access: boolean } (iOS reports 1 / 0)
 managerEmitter.addListener(
   iHealthDeviceManagerModule.Event_Authenticate_Result, handler
 );
@@ -463,6 +474,61 @@ BP550BTModule.setDisplayConfig(mac, showSystolic, showDiastolic);
 BP550BTModule.transferFinished(mac);
 BP550BTModule.disconnect(mac);
 ```
+
+---
+
+### Blood Pressure Monitor — KN-550LT (BP550LTModule)
+
+KN-550LT has no online measurement; results are read back from the device memory.
+
+```javascript
+import { BP550LTModule, iHealthDeviceManagerModule } from '@ihealth/ihealthlibrary-react-native';
+
+iHealthDeviceManagerModule.startDiscovery(iHealthDeviceManagerModule.KN550LT);
+iHealthDeviceManagerModule.connectDevice(mac, iHealthDeviceManagerModule.KN550LT);
+
+const emitter = new NativeEventEmitter(NativeModules.BP550LTModule);
+emitter.addListener(BP550LTModule.Event_Notify, (event) => {
+  console.log(event);
+});
+
+BP550LTModule.getAllConnectedDevices(); // { action: 'action_get_all_connected_devices', devices: [...] }
+BP550LTModule.getFirmVersion(mac);      // { action: 'action_get_firmwareVersion', firmwareVersion, hardwareVersion }
+BP550LTModule.getBattery(mac);          // { action: 'battery_bp', battery }
+BP550LTModule.getFunctionInfo(mac);     // { action: 'function_info_bp', haveOffline, haveShowUnitSetting, showUnit, ... }
+                                        //   memoryGroup / maxMemoryCapacity only when the native SDK reports them
+                                        //   (the iOS SDK does not)
+BP550LTModule.getOffLineNum(mac);       // { action: 'offlinenum', offlinenum }
+BP550LTModule.getOffLineData(mac);      // { action: 'historicaldata_bp', data: [{ time, sys, dia, heartRate,
+                                        //   arrhythmia, body_movement, cuff_loose, time_calibration, dataID }] }
+BP550LTModule.getTime(mac);             // { action: 'action_get_time', date }
+BP550LTModule.transferFinished(mac);    // deletes the device memory -> { action: 'get_historical_over_bp' }
+BP550LTModule.disconnect(mac);
+// Errors (iOS): { action: 'error_bp', error, description }; Android: see the differences table below
+```
+
+Wait for the reply to a call before sending the same call again: on iOS two identical calls in flight are answered
+only once. `connectDevice` may not report `Event_Device_Connect_Failed` when the device is out of range, so keep your
+own timeout for connections.
+
+#### KN-550LT: iOS and Android differences
+
+The normal flow (scan, connect, every call above, delete, disconnect) behaves the same on both platforms. Error and
+timeout handling differs:
+
+| Situation | iOS | Android |
+|---|---|---|
+| Call before connecting, with an unknown MAC, or after disconnecting | `Event_Notify` `{ action: 'error_bp', description: 'device is disconnected.' }` | Separate event `'Error'` with `{ errorid: 400 }`; nothing on `Event_Notify`. Listen with `emitter.addListener('Error', …)` |
+| Device does not answer a call | `error_bp` with `error: 404` after 3 s | No error event. The SDK disconnects about 30 s later (`Event_Device_Disconnect`) |
+| Device answers slowly (over 3 s) | `error_bp` with `error: 404`; the late answer is dropped | The SDK resends the command; every late answer is delivered, so the same reply can arrive more than once |
+| Device rejects authentication or does not answer it | `Event_Device_Connect_Failed` | No event |
+| `stopDiscovery()` | `Event_Scan_Finish` | No event (`Event_Scan_Finish` only when the scan ends by itself) |
+| `getFunctionInfo` | No `memoryGroup` / `maxMemoryCapacity`; `showUnit` is 0 or 1 | Includes `memoryGroup` / `maxMemoryCapacity`; `showUnit` is the raw device value (e.g. 32 for kPa) |
+| Scan result | `{ mac, type }` | `{ mac, type, rssi }` |
+| Same call sent twice without waiting | Answered once | Answered twice |
+
+On Android, run your own timeout for each call and for `connectDevice`, treat `Event_Device_Disconnect` as the end of
+any pending call, and ignore duplicate replies.
 
 ---
 
@@ -692,6 +758,7 @@ BTMModule.disconnect(mac);
 | Blood Pressure | BP7 | `BP7Module` | iOS & Android |
 | Blood Pressure | BP7S | `BP7SModule` | iOS & Android |
 | Blood Pressure | KN-550BT | `BP550BTModule` | iOS & Android |
+| Blood Pressure | KN-550LT | `BP550LTModule` | iOS & Android |
 | Pulse Oximeter | PO3 | `PO3Module` | iOS & Android |
 | Pulse Oximeter | PO1 | `PO1Module` | iOS & Android |
 | Body Scale | HS2S | `HS2SModule` | iOS & Android |
@@ -746,6 +813,9 @@ A: Delete the `ios/Pods` directory and run `cd ios && pod install` again.
 **Q: Android method calls have no effect.**  
 A: Confirm that the `.pem` license file is present in `android/app/src/main/assets/` and that `sdkAuthWithLicense()` was called at app startup.
 
+**Q: iOS scanning never finds a device (and reports no error).**  
+A: Add the `.pem` license file to the app target, call `sdkAuthWithLicense()` before scanning and check that `Event_Authenticate_Result` reports `access: 1`. The license must match the app's bundle identifier.
+
 **Q: `NativeModules.XXXModule` is `null`.**  
 A: ECG3 and ECG3USB are iOS-only. They will be `null` on Android. Use `Platform.OS === 'ios'` before accessing these modules.
 
@@ -769,6 +839,14 @@ A: If you are upgrading to React Native >= 0.76 and enabling the New Architectur
 ---
 
 ## Release Notes
+
+### v2.1.0
+- **New device: KN-550LT blood pressure monitor** (`BP550LTModule`, device type `iHealthDeviceManagerModule.KN550LT`) on iOS and Android
+- Native SDKs upgraded: iOS `libiHealthSDK2.15.0.a`, Android `iHealthSDK_2.16.0.jar`
+- iOS: added `BPProfileModule sendErrorToEmitter:` so BP error events are delivered in RN 0.81+
+- iOS: `BP550LTModule` runs on the main queue so the native 3 s command timeouts fire (`error_bp` 404 instead of no reply)
+- Android: declares the SQLCipher dependencies required by `iHealthSDK_2.16.0.jar` (`net.zetetic:sqlcipher-android`, `androidx.sqlite:sqlite`)
+- KN-550LT: iOS / Android differences in error and timeout handling are listed in the KN-550LT section
 
 ### v2.0.1
 - Hardened SDK module initialization: `RCTModule.addListener()` calls are now wrapped in `typeof` checks and `try/catch` to prevent rare crashes during React Native bootstrap on the Old Architecture

@@ -54,6 +54,7 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
     private final static String BP7   = "BP7";
     private final static String BP7S  = "BP7S";
     private final static String KN550 = "KN550";
+    private final static String KN550LT = "KN550LT";
     private final static String HS2   = "HS2";
     private final static String HS2S  = "HS2S";
     private final static String HS2SPRO  = "HS2S Pro";
@@ -108,6 +109,9 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
           if (deviceType.equals("KN-550BT")) {
               params.putString("type", "KN550");
 
+          } else if (deviceType.equals(iHealthDevicesManager.TYPE_KN550LT)) {
+              params.putString("type", KN550LT);
+
           } else {
               params.putString("type", deviceType);
           }
@@ -130,6 +134,9 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
               params.putString("mac", mac);
               if (deviceType.equals("KN-550BT")) {
                 params.putString("type", "KN550");
+
+              } else if (deviceType.equals(iHealthDevicesManager.TYPE_KN550LT)) {
+                params.putString("type", KN550LT);
 
               } else {
                 params.putString("type", deviceType);
@@ -198,6 +205,10 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
 
             case iHealthDevicesManager.TYPE_550BT:
                 module = getReactApplicationContext().getNativeModule(BP550BTModule.class);
+                break;
+
+            case iHealthDevicesManager.TYPE_KN550LT:
+                module = getReactApplicationContext().getNativeModule(BP550LTModule.class);
                 break;
 
             case iHealthDevicesManager.TYPE_BP7:
@@ -309,6 +320,7 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
         constants.put(BP7, iHealthDevicesManager.DISCOVERY_BP7);
         constants.put(BP7S, iHealthDevicesManager.DISCOVERY_BP7S);
         constants.put(KN550, iHealthDevicesManager.DISCOVERY_BP550BT);
+        constants.put(KN550LT, iHealthDevicesManager.DISCOVERY_KN550LT);
         constants.put(HS2, iHealthDevicesManager.DISCOVERY_HS2);
         constants.put(HS2S, iHealthDevicesManager.DISCOVERY_HS2S);
         constants.put(HS4, iHealthDevicesManager.DISCOVERY_HS4);
@@ -403,6 +415,9 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
             case "KN550":
                 return DiscoveryTypeEnum.BP550BT;
 
+            case "KN550LT":
+                return DiscoveryTypeEnum.KN550LT;
+
             case "HS2":
                 return DiscoveryTypeEnum.HS2;
 
@@ -465,6 +480,8 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
         } else {
             if (type.equals("KN550")) {
                 iHealthDevicesManager.getInstance().connectDevice(this.userName, mac, iHealthDevicesManager.TYPE_550BT);
+            } else if (type.equals(KN550LT)) {
+                iHealthDevicesManager.getInstance().connectDevice(this.userName, mac, iHealthDevicesManager.TYPE_KN550LT);
             } else {
                 iHealthDevicesManager.getInstance().connectDevice(this.userName, mac, type);
             }
@@ -715,6 +732,8 @@ public class iHealthDeviceManagerModule extends iHealthBaseModule implements Lif
     public void disconnectDevice(String mac, String type) {
         if (type.equals(BG1)) {
             Bg1Control.getInstance().disconnect();
+        } else if (type.equals(KN550LT)) {
+            iHealthDevicesManager.getInstance().disconnectDevice(mac, iHealthDevicesManager.TYPE_KN550LT);
         } else {
             iHealthDevicesManager.getInstance().disconnectDevice(mac, type);
         }

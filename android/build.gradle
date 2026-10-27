@@ -40,7 +40,11 @@ dependencies {
     api 'com.facebook.react:react-native:+'
     api 'com.squareup.okhttp3:okhttp:4.8.0'
     api 'com.google.code.gson:gson:2.8.6'
-    implementation files('libs/iHealthSDK_2.15.0.jar')
+    implementation files('libs/iHealthSDK_2.16.0.jar')
+    // iHealthSDK 2.16.0 stores its statistics database with SQLCipher; without these the app crashes on startup
+    // (NoClassDefFoundError: LitePalOpenHelper). A local jar cannot carry dependencies, so they are declared here.
+    api 'net.zetetic:sqlcipher-android:4.6.1@aar'
+    api 'androidx.sqlite:sqlite:2.4.0'
     implementation 'org.greenrobot:greendao:3.2.2'
     // implementation 'no.nordicsemi.android:dfu:1.6.1'
     implementation 'com.alibaba:fastjson:1.2.48'

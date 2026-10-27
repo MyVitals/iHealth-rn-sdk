@@ -1,4 +1,5 @@
 import bt550API from './550btAPI'
+import lt550API from './550ltAPI'
 import bg1aAPI from './bg1aAPI'
 import am6API from './am6API'
 import bg5sAPI from './bg5sAPI'
@@ -11,6 +12,7 @@ import nt13bAPI from './nt13bAPI'
 import {
   BG1AModule,
   BP550BTModule,
+  BP550LTModule,
   AM6Module,
   BG5SModule,
   HS2SModule,
@@ -24,6 +26,7 @@ import {
 // Maps device type to its native module name (for NativeEventEmitter)
 const deviceModuleNameMap = {
   'KN550':    'BP550BTModule',
+  'KN550LT':  'BP550LTModule',
   'BG1A':     'BG1AModule',
   'AM6':      'AM6Module',
   'BG5S':     'BG5SModule',
@@ -43,6 +46,9 @@ export default {
     switch (type) {
       case 'KN550':
         return BP550BTModule.Event_Notify
+
+      case 'KN550LT':
+        return BP550LTModule.Event_Notify
 
       case 'BG1A':
         return BG1AModule.Event_Notify
@@ -76,6 +82,9 @@ export default {
     switch (type) {
       case 'KN550':
         return bt550API
+
+      case 'KN550LT':
+        return lt550API
 
       case 'BG1A':
         return bg1aAPI

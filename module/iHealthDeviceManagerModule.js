@@ -46,6 +46,7 @@ module.exports = {
     BP5S:    'BP5S',
     BP7S:    'BP7S',
     KN550:   'KN550',
+    KN550LT: 'KN550LT',
     HS4S:    'HS4S',
     HS4:     'HS4',
     HS2:     'HS2',

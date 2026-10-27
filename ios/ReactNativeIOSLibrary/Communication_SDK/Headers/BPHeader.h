@@ -60,4 +60,10 @@
 
 #import "KN550LT.h"
 #import "KN550LTController.h"
+
+#import "BP300CL.h"
+#import "BP300CLController.h"
+
+#import "KD723SE.h"
+#import "KD723SEController.h"
 #endif

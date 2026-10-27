@@ -159,6 +159,7 @@ emitter.addListener('BP5.MODULE.NOTIFY', handler);
 | `BP7Module` | `BP7Module.Event_Notify` |
 | `BP7SModule` | `BP7SModule.Event_Notify` |
 | `BP550BTModule` | `BP550BTModule.Event_Notify` |
+| `BP550LTModule` | `BP550LTModule.Event_Notify` |
 | `PO3Module` | `PO3Module.Event_Notify` |
 | `PO1Module` | `PO1Module.Event_Notify` |
 | `HS2Module` | `HS2Module.Event_Notify` |

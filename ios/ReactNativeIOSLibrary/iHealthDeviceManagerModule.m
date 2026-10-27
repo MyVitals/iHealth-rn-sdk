@@ -68,6 +68,7 @@
 #define kType_BP5S @"BP5S"
 #define kType_BP7S @"BP7S"
 #define kType_KN550 @"KN550"
+#define kType_KN550LT @"KN550LT"
 #define kType_HS4 @"HS4"
 #define kType_HS4S @"HS4S"
 #define kType_HS2 @"HS2"
@@ -88,6 +89,9 @@
 #define kType_BG1A @"BG1A"
 
 #define kType_AM6 @"AM6"
+
+// KN-550LT reports this protocol string in its connect/disconnect notifications
+#define KN550LT_PROTOCOL @"com.jiuan.BPAV40"
 
 
 @interface iHealthDeviceManagerModule()<TS28BControllerDelegate,IHDeviceSDKLogDelegate>
@@ -131,6 +135,7 @@ RCT_EXPORT_MODULE()
              @"BP5S" : kType_BP5S,
              @"BP7S" : kType_BP7S,
              @"KN550":kType_KN550,
+             @"KN550LT":kType_KN550LT,
              @"HS4S" :kType_HS4,
              @"HS4" :kType_HS4,
              @"HS2" :kType_HS2,
@@ -222,6 +227,11 @@ RCT_EXPORT_MODULE()
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceConnect:) name:KN550BTConnectNoti object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceDisconnect:) name:KN550BTDisConnectNoti object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceConnectFailed:) name:KN550BTConnectFailed object:nil];
+        //KN550LT
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceDiscover:) name:KN550LTDiscover object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceConnect:) name:KN550LTConnectNoti object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceDisconnect:) name:KN550LTDisConnectNoti object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceConnectFailed:) name:KN550LTConnectFailed object:nil];
         // HS4S
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceDiscover:) name:HS4Discover object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deviceConnectFailed:) name:HS4ConnectFailed object:nil];
@@ -343,6 +353,7 @@ RCT_EXPORT_MODULE()
         [HS2SPROController shareIHHS2SPROController];
         [THV3Controller sharedController];
         [NT13BController shareIHNT13BController];
+        [KN550LTController shareIHKN550LTController];
         [BG1SController shareIHBG1SController];
         [PO1Controller shareIHPO1Controller];
         [PT3SBTController shareIHPT3SBTController];
@@ -468,6 +479,7 @@ RCT_EXPORT_MODULE()
                                         @"BP7S" : kType_BP7S,
                                         @"KN-550BT":kType_KN550,
                                         @"KN550":kType_KN550,
+                                        @"KN-550LT":kType_KN550LT,
                                         @"HS4S" :kType_HS4,
                                         @"HS4" :kType_HS4,
                                         @"HS2" :kType_HS2,
@@ -527,6 +539,10 @@ RCT_EXPORT_MODULE()
         deviceName=@"NT13B";
     }
     
+    if ([protocolString isEqualToString:KN550LT_PROTOCOL]) {
+        deviceName=@"KN-550LT";
+    }
+    
     NSDictionary *deviceNameForType = @{
                                         @"AM3S" :kType_AM3S,
                                         @"AM4" :kType_AM4,
@@ -539,6 +555,7 @@ RCT_EXPORT_MODULE()
                                         @"BP7S" : kType_BP7S,
                                         @"KN-550BT":kType_KN550,
                                         @"KN550":kType_KN550,
+                                        @"KN-550LT":kType_KN550LT,
                                         @"HS4S" :kType_HS4,
                                         @"HS4" :kType_HS4,
                                         @"HS2" :kType_HS2,
@@ -578,6 +595,10 @@ RCT_EXPORT_MODULE()
         deviceName=@"NT13B";
     }
     
+    if ([protocolString isEqualToString:KN550LT_PROTOCOL]) {
+        deviceName=@"KN-550LT";
+    }
+    
     if ([protocolString isEqualToString:@"com.jiuan.PO1"]) {
         deviceName=@"PO1";
     }
@@ -594,6 +615,7 @@ RCT_EXPORT_MODULE()
                                         @"BP7S" : kType_BP7S,
                                         @"KN-550BT":kType_KN550,
                                         @"KN550":kType_KN550,
+                                        @"KN-550LT":kType_KN550LT,
                                         @"HS4S" :kType_HS4,
                                         @"HS4" :kType_HS4,
                                         @"HS2" :kType_HS2,
@@ -630,6 +652,10 @@ RCT_EXPORT_MODULE()
         deviceName=@"NT13B";
     }
     
+    if ([protocolString isEqualToString:KN550LT_PROTOCOL]) {
+        deviceName=@"KN-550LT";
+    }
+    
     NSDictionary *deviceNameForType = @{
                                         @"AM3S" :kType_AM3S,
                                         @"AM4" :kType_AM4,
@@ -643,6 +669,7 @@ RCT_EXPORT_MODULE()
                                         @"BP7S" : kType_BP7S,
                                         @"KN-550BT":kType_KN550,
                                         @"KN550":kType_KN550,
+                                        @"KN-550LT":kType_KN550LT,
                                         @"HS4S" :kType_HS4,
                                         @"HS4" :kType_HS4,
                                         @"HS2" :kType_HS2,
@@ -788,6 +815,9 @@ RCT_EXPORT_METHOD(startDiscovery:(nonnull NSString *)deviceType){
     } else if ([deviceType isEqualToString:kType_KN550]){
         
         [[ScanDeviceController commandGetInstance] commandScanDeviceType:HealthDeviceType_KN550BT];
+    } else if ([deviceType isEqualToString:kType_KN550LT]){
+        
+        [[ScanDeviceController commandGetInstance] commandScanDeviceType:HealthDeviceType_KN550LT];
     } else if ([deviceType isEqualToString:kType_HS4] ||[deviceType isEqualToString:kType_HS4S]){
         
         [[ScanDeviceController commandGetInstance] commandScanDeviceType:HealthDeviceType_HS4];
@@ -924,6 +954,8 @@ RCT_EXPORT_METHOD(stopDiscovery){
     [[ScanDeviceController commandGetInstance] commandStopScanDeviceType:HealthDeviceType_BP7S];
     
     [[ScanDeviceController commandGetInstance] commandStopScanDeviceType:HealthDeviceType_KN550BT];
+    
+    [[ScanDeviceController commandGetInstance] commandStopScanDeviceType:HealthDeviceType_KN550LT];
     
     [[ScanDeviceController commandGetInstance] commandStopScanDeviceType:HealthDeviceType_PO3];
     
@@ -1098,6 +1130,9 @@ RCT_EXPORT_METHOD(connectDevice:(nonnull NSString *)mac type:(nonnull NSString *
     }else if ([deviceType isEqualToString:kType_KN550]){
         
         [[ConnectDeviceController commandGetInstance] commandContectDeviceWithDeviceType:HealthDeviceType_KN550BT andSerialNub:mac];
+    }else if ([deviceType isEqualToString:kType_KN550LT]){
+        
+        [[ConnectDeviceController commandGetInstance] commandContectDeviceWithDeviceType:HealthDeviceType_KN550LT andSerialNub:mac];
     }else if ([deviceType isEqualToString:kType_HS4]||[deviceType isEqualToString:kType_HS4S]){
         
         [[ConnectDeviceController commandGetInstance] commandContectDeviceWithDeviceType:HealthDeviceType_HS4 andSerialNub:mac];

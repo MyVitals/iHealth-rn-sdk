@@ -128,4 +128,7 @@
 
 + (void)sendErrorToBridge:(RCTBridge *)bridge eventNotify:(NSString*)eventNotify WithCode:(NSInteger)errorCode mac:(NSString*)mac type:(NSString*)type;
 
+// Same payload as sendErrorToBridge:...mac:type:, but delivered through the emitter so it also works in RN 0.81+.
++ (void)sendErrorToEmitter:(RCTEventEmitter *)emitter eventNotify:(NSString*)eventNotify WithCode:(NSInteger)errorCode mac:(NSString*)mac type:(NSString*)type;
+
 @end

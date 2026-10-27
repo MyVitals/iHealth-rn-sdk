@@ -4,7 +4,7 @@ import { ListItem } from '@rneui/themed';
 
 
 const DeviceTypes = [
-  'AM6', 'BG5S', 'BP5S', 'KN550',
+  'AM6', 'BG5S', 'BP5S', 'KN550', 'KN550LT',
   'BG1A', 'BG1S', 'HS2S', 'HS2S Pro', 'PO3', 'NT13B'
 ]
 

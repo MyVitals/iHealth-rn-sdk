@@ -1,6 +1,6 @@
 {
   "name": "@ihealth/ihealthlibrary-react-native",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "iHealth React Native SDK - supports React Native New Architecture (TurboModules) and Old Architecture",
   "main": "index.js",
   "files": [
@@ -54,6 +54,7 @@
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.ihealth.library"
-    }
+    },
+    "excludedPlatforms": ["android"]
   }
 }

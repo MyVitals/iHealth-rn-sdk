@@ -65,6 +65,8 @@ typedef NS_ENUM(NSUInteger, HealthDeviceType) {
     HealthDeviceType_AM6,
     HealthDeviceType_KD5811BT,
     HealthDeviceType_KN550LT,
+    HealthDeviceType_BP300CL,
+    HealthDeviceType_KD723SE,
 };
 
 #import "ScanDeviceController.h"
