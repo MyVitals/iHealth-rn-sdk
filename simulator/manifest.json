@@ -42,8 +42,8 @@
       },
       "validated_with": {
         "ios_sdk": "iHealthDeviceSDK 2.16.0（BG5S 11-05 真机验证；其余机型 10-27 验证）",
-        "rn_sdk": "iHealth-rn-sdk 2.1.0",
-        "android_sdk": "Android_SDK release（11-05 bc012ada）"
+        "rn_sdk": "iHealth RN SDK 2.1.0",
+        "android_sdk": "Android SDK 2.16（2026-11-05）"
       },
       "models": {
         "5819d": {
@@ -125,9 +125,9 @@
         "firmware.bin": "e324ad1108ae79939bffe728737a0b1c0af39ab2db67d2b1ee3ec8aecbba767d"
       },
       "validated_with": {
-        "ios_sdk": "iHealthDeviceSDK 2.16.0_beta10（MyVitals iOS 4.17.1 develop，2026-11）",
-        "rn_sdk": "iHealth-rn-sdk 2.1.0（2026-10-27 发布测试）",
-        "android_sdk": "Android_SDK release 分支（2026-11-05 bc012ada）"
+        "ios_sdk": "iHealthDeviceSDK 2.16.0_beta10（2026-11）",
+        "rn_sdk": "iHealth RN SDK 2.1.0",
+        "android_sdk": "Android SDK 2.16（2026-11-05）"
       },
       "models": {
         "5819d": {

@@ -28,7 +28,7 @@ simulator/
    model kn550bt                          # 板子重启成 KN-550BT；scenario list 看可用场景
    ```
 
-机型 key：`5819d` `723se` `po3` `kn550bt` `kn550lt` `pt3sbt` `bg1s` `hs2s` `bg5s`（iGluco 用的 BG5S，11-05 加）。详细见 `docs/模拟板测试指南.md`。
+机型 key：`5819d` `723se` `po3` `kn550bt` `kn550lt` `pt3sbt` `bg1s` `hs2s` `bg5s`。详细见 `docs/模拟板测试指南.md`。
 
 ## 哪个固件配哪个 SDK
 
