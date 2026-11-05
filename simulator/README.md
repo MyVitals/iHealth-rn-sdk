@@ -11,8 +11,7 @@ simulator/
   flash.sh                      一键刷固件（macOS / Linux；Windows 见脚本注释）
   firmware/<版本>/*.bin         固件镜像（bootloader / partitions / boot_app0 / firmware）
   CHANGELOG.md                  固件版本记录
-  docs/ESP32模拟板使用说明.md     买什么板、怎么刷、串口命令、场景、灯、排错
-  docs/全流程测试说明.md          从协议自测到 App 全量执行组、Android、测试 Agent 的分层流程
+  docs/模拟板测试指南.md          买板、刷固件、切机型、用你的 App 连接、串口造数据/造故障、建议的测试流程、排错
 ```
 
 ## 三步开始
@@ -29,7 +28,7 @@ simulator/
    model kn550bt                          # 板子重启成 KN-550BT；scenario list 看可用场景
    ```
 
-机型 key：`5819d` `723se` `po3` `kn550bt` `kn550lt` `pt3sbt` `bg1s` `hs2s` `bg5s`（iGluco 用的 BG5S，11-05 加）。详细见 `docs/ESP32模拟板使用说明.md`。
+机型 key：`5819d` `723se` `po3` `kn550bt` `kn550lt` `pt3sbt` `bg1s` `hs2s` `bg5s`（iGluco 用的 BG5S，11-05 加）。详细见 `docs/模拟板测试指南.md`。
 
 ## 哪个固件配哪个 SDK
 
@@ -39,5 +38,4 @@ SDK 升级若改了协议（新机型、认证、帧格式），固件会出新�
 ## 原则
 
 - 固件源码（协议实现）不随 SDK 发布，只发二进制。需要新机型 / 新场景找 SDK 组。
-- 模拟板用的是芯片自己的蓝牙地址，每块板、每个机型地址都不同（见使用说明"MAC 规则"），
-  App 里不要写死设备序列号。
+- 模拟板用的是芯片自己的蓝牙地址，每块板、每个机型地址都不同（见指南第 3 节），App 里不要写死设备序列号。

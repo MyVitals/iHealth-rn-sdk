@@ -41,7 +41,7 @@
         "firmware.bin": "6894a0ea702a19e308b95805266ea851cae04815d547e2f897e9857cd524d60b"
       },
       "validated_with": {
-        "ios_sdk": "iHealthDeviceSDK 2.16.0_beta10 + SDKDemo autotest（BG5S 真机 11-05 10 步通过；其余机型沿用 10-27 验证）",
+        "ios_sdk": "iHealthDeviceSDK 2.16.0（BG5S 11-05 真机验证；其余机型 10-27 验证）",
         "rn_sdk": "iHealth-rn-sdk 2.1.0",
         "android_sdk": "Android_SDK release（11-05 bc012ada）"
       },
@@ -101,7 +101,7 @@
         },
         "bg5s": {
           "name": "BG5S",
-          "kind": "血糖仪（流协议版，iGluco 用）",
+          "kind": "血糖仪（流协议版）",
           "sdk_type": "BG5S",
           "scenarios": 82,
           "notes": "串口命令前缀 b5；与 KN-550BT 共用 com.jiuan.dev 服务，SDK 靠型号串分流"

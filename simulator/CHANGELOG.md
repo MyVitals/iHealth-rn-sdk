@@ -4,9 +4,9 @@
 
 | 版本 | 机型 | 主要变化 | 验证过的 SDK |
 |---|---|---|---|
-| 2026-11-05 | KD-5819D、KD-723SE、PO3、KN-550BT、KN-550LT、PT3SBT、BG1S、HS2S、**BG5S**（流协议版血糖仪，iGluco 用） | 新增 BG5S：0x26/49/23/25/47/43/4B/31/A0/A1/A2/D0 指令、500 条离线记录分包、滴血到出结果的忙窗口、82 个场景；机型号范围检查修正（切 bg5s 不再回落到默认） | iOS 2.16.0_beta10（BG5S SDKDemo 真机 10 步通过） |
+| 2026-11-05 | KD-5819D、KD-723SE、PO3、KN-550BT、KN-550LT、PT3SBT、BG1S、HS2S、**BG5S**（血糖仪） | 新增 BG5S：0x26/49/23/25/47/43/4B/31/A0/A1/A2/D0 指令、500 条离线记录分包、滴血到出结果的忙窗口、82 个场景；机型号范围检查修正（切 bg5s 不再回落到默认） | iOS 2.16.0_beta10（BG5S SDKDemo 真机 10 步通过） |
 | 2026-10-27 | KD-5819D、KD-723SE、PO3、KN-550BT、KN-550LT、PT3SBT、BG1S、HS2S | KN-550BT 加 `proto 21/22`（Android 只在 BPAV21 下发 0x4A）；HS2S 补离线 / 心率 / 错误类命令；每机型独立蓝牙地址（避开 iOS 外设名缓存） | iOS 2.16.0_beta10、RN 2.1.0、Android release（11-05） |
-| 2026-10-22 | KD-5819D、KD-723SE、PO3、KN-550BT、KN-550LT、PT3SBT、BG1S、HS2S | 五个新机型（KN-550BT/LT、PT3SBT、BG1S、HS2S）首版 | iOS 2.16.0_beta |
+| 2026-10-22 | KD-5819D、KD-723SE、PO3、KN-550BT、KN-550LT、PT3SBT、BG1S、HS2S | 五个新机型首版 | iOS 2.16.0_beta |
 | 2026-10-20 | KD-5819D、KD-723SE | 首版：新加密流协议（FA/FB/FC/FD 认证、AES-CTR 帧）、23 个故障场景 | iOS 2.15.x |
 
 ## 什么时候要出新版本
