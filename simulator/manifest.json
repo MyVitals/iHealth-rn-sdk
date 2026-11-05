@@ -1,0 +1,194 @@
+{
+  "$comment": "iHealth 设备模拟板固件清单。一份固件同时包含全部机型，刷一次、用串口 `model <key>` 切换。放进各 SDK 仓库的 simulator/ 目录，App 侧同事按 README 刷板即可，不需要固件源码。",
+  "schema": 1,
+  "latest": "2026-11-05",
+  "board": {
+    "name": "微雪 ESP32-S3-DEV-KIT-N16R8（或任何 ESP32-S3、16MB Flash、带 CH343 串口的开发板）",
+    "chip": "esp32s3",
+    "flash_size": "16MB",
+    "flash_mode": "dio",
+    "flash_freq": "80m",
+    "serial_baud": 115200,
+    "usb_port": "插标有 UART / COM 的那个 USB-C 口（CH343，系统里显示为 USB Single Serial）；标 USB 的口是芯片原生口，不用"
+  },
+  "flash_layout": [
+    {
+      "offset": "0x0",
+      "file": "bootloader.bin"
+    },
+    {
+      "offset": "0x8000",
+      "file": "partitions.bin"
+    },
+    {
+      "offset": "0xe000",
+      "file": "boot_app0.bin"
+    },
+    {
+      "offset": "0x10000",
+      "file": "firmware.bin"
+    }
+  ],
+  "versions": {
+    "2026-11-05": {
+      "built": "2026-11-05 12:00:10",
+      "banner": "=== iHealth <机型> BLE simulator === build Nov  5 2026 12:00:10",
+      "dir": "firmware/2026-11-05",
+      "sha256": {
+        "bootloader.bin": "84bb365666003b051f564d04380d0cf5d9d85c420ddafe9fc863071b49e49bfc",
+        "partitions.bin": "bd0f7954aca2ef7d925ee21aaa1f3dc8822d1d6ce5cbbd26a135e5886bfff6ce",
+        "boot_app0.bin": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0",
+        "firmware.bin": "6894a0ea702a19e308b95805266ea851cae04815d547e2f897e9857cd524d60b"
+      },
+      "validated_with": {
+        "ios_sdk": "iHealthDeviceSDK 2.16.0_beta10 + SDKDemo autotest（BG5S 真机 11-05 10 步通过；其余机型沿用 10-27 验证）",
+        "rn_sdk": "iHealth-rn-sdk 2.1.0",
+        "android_sdk": "Android_SDK release（11-05 bc012ada）"
+      },
+      "models": {
+        "5819d": {
+          "name": "KD-5819D",
+          "kind": "血压计（新加密流协议）",
+          "sdk_type": "KD5819D",
+          "scenarios": 23,
+          "notes": "默认机型；蓝牙地址 = 芯片地址"
+        },
+        "723se": {
+          "name": "KD-723SE",
+          "kind": "血压计（新加密流协议）",
+          "sdk_type": "KD723SE",
+          "scenarios": 32,
+          "protocol_doc": "SDK_Doc/BP/KD723SE v0.03"
+        },
+        "po3": {
+          "name": "PO3（新版 PO3M）",
+          "kind": "血氧仪",
+          "sdk_type": "PO3",
+          "scenarios": 51
+        },
+        "kn550bt": {
+          "name": "KN-550BT",
+          "kind": "血压计（BPAV21/22）",
+          "sdk_type": "KN550BT",
+          "scenarios": 47,
+          "notes": "`proto 21|22` 切 FF01 协议串"
+        },
+        "kn550lt": {
+          "name": "KN-550LT",
+          "kind": "血压计",
+          "sdk_type": "KN550LT",
+          "scenarios": 48
+        },
+        "pt3sbt": {
+          "name": "PT3SBT",
+          "kind": "额温枪",
+          "sdk_type": "PT3SBT",
+          "scenarios": 47,
+          "danger_scenarios": 3,
+          "notes": "3 个危险场景默认禁用（会改测试账号真实数据）"
+        },
+        "bg1s": {
+          "name": "BG1S",
+          "kind": "血糖仪",
+          "sdk_type": "BG1S",
+          "scenarios": 52
+        },
+        "hs2s": {
+          "name": "HS2S",
+          "kind": "体脂秤",
+          "sdk_type": "HS2S",
+          "scenarios": 79
+        },
+        "bg5s": {
+          "name": "BG5S",
+          "kind": "血糖仪（流协议版，iGluco 用）",
+          "sdk_type": "BG5S",
+          "scenarios": 82,
+          "notes": "串口命令前缀 b5；与 KN-550BT 共用 com.jiuan.dev 服务，SDK 靠型号串分流"
+        }
+      },
+      "not_implemented": [
+        "OTA 指令（0xD0–0xD6 / 0xF0 升级帧）只打日志",
+        "BG5（2017 基础通信协议版）",
+        "HS1 / HS1S",
+        "BG5A"
+      ]
+    },
+    "2026-10-27": {
+      "built": "2026-10-27 15:37:35",
+      "banner": "=== iHealth <机型> BLE simulator === build Oct 27 2026 15:37:35",
+      "dir": "firmware/2026-10-27",
+      "sha256": {
+        "bootloader.bin": "84bb365666003b051f564d04380d0cf5d9d85c420ddafe9fc863071b49e49bfc",
+        "partitions.bin": "bd0f7954aca2ef7d925ee21aaa1f3dc8822d1d6ce5cbbd26a135e5886bfff6ce",
+        "boot_app0.bin": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0",
+        "firmware.bin": "e324ad1108ae79939bffe728737a0b1c0af39ab2db67d2b1ee3ec8aecbba767d"
+      },
+      "validated_with": {
+        "ios_sdk": "iHealthDeviceSDK 2.16.0_beta10（MyVitals iOS 4.17.1 develop，2026-11）",
+        "rn_sdk": "iHealth-rn-sdk 2.1.0（2026-10-27 发布测试）",
+        "android_sdk": "Android_SDK release 分支（2026-11-05 bc012ada）"
+      },
+      "models": {
+        "5819d": {
+          "name": "KD-5819D",
+          "kind": "血压计（新加密流协议）",
+          "sdk_type": "KD5819D",
+          "scenarios": 23,
+          "notes": "默认机型；蓝牙地址 = 芯片地址"
+        },
+        "723se": {
+          "name": "KD-723SE",
+          "kind": "血压计（新加密流协议）",
+          "sdk_type": "KD723SE",
+          "scenarios": 32,
+          "protocol_doc": "SDK_Doc/BP/KD723SE v0.03"
+        },
+        "po3": {
+          "name": "PO3（新版 PO3M）",
+          "kind": "血氧仪",
+          "sdk_type": "PO3",
+          "scenarios": 51
+        },
+        "kn550bt": {
+          "name": "KN-550BT",
+          "kind": "血压计（BPAV21/22）",
+          "sdk_type": "KN550BT",
+          "scenarios": 47,
+          "notes": "`proto 21|22` 切 FF01 协议串"
+        },
+        "kn550lt": {
+          "name": "KN-550LT",
+          "kind": "血压计",
+          "sdk_type": "KN550LT",
+          "scenarios": 48
+        },
+        "pt3sbt": {
+          "name": "PT3SBT",
+          "kind": "额温枪",
+          "sdk_type": "PT3SBT",
+          "scenarios": 47,
+          "danger_scenarios": 3,
+          "notes": "3 个危险场景默认禁用（会改测试账号真实数据）"
+        },
+        "bg1s": {
+          "name": "BG1S",
+          "kind": "血糖仪",
+          "sdk_type": "BG1S",
+          "scenarios": 52
+        },
+        "hs2s": {
+          "name": "HS2S",
+          "kind": "体脂秤",
+          "sdk_type": "HS2S",
+          "scenarios": 79
+        }
+      },
+      "not_implemented": [
+        "OTA 指令（0xD0–0xD6）只打日志",
+        "HS1 / HS1S",
+        "BG5A"
+      ]
+    }
+  }
+}
